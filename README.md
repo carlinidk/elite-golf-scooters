@@ -1,5 +1,6 @@
 https://carlinidk.github.io/elite-golf-scooters/
-================================================
+---------------------------------------------------
+
 import React, { useState, useEffect } from 'react';
 import { 
   ChevronRight, 
@@ -12,7 +13,9 @@ import {
   ShoppingCart, 
   Info,
   Image as ImageIcon,
-  Quote
+  Quote,
+  ChevronDown,
+  HelpCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -108,6 +111,33 @@ const TESTIMONIALS = [
     role: "Senior League Director",
     text: "Our club bought a fleet of these. They are gentle on the grass and the members absolutely love them. Simple controls, smooth ride.",
     rating: 5
+  }
+];
+
+const FAQS = [
+  {
+    question: "How long does the battery last on a single charge?",
+    answer: "Our batteries are specifically designed for golf. Depending on the model, you can expect between 18 to 60 holes of play. The Albatross Pro, for example, typically lasts 3 full rounds of 18 holes before needing a recharge."
+  },
+  {
+    question: "Are these scooters safe for the turf?",
+    answer: "Absolutely. Our scooters feature high-flotation, low-pressure tires specifically engineered to distribute weight evenly. They actually exert less pressure per square inch on the grass than a traditional 4-wheel golf cart."
+  },
+  {
+    question: "Do I need any special tools to assemble it?",
+    answer: "No. Most models arrive 95% assembled. You typically only need to attach the seat and handlebars with the included tool kit. It usually takes less than 15 minutes to get course-ready."
+  },
+  {
+    question: "Can these handle hilly or uneven terrain?",
+    answer: "Yes. Models like the Albatross Pro and Birdie Sport feature high-torque motors and advanced suspension systems designed specifically to climb steep fairway hills and stabilize on uneven roughs."
+  },
+  {
+    question: "What kind of maintenance is required?",
+    answer: "Very little. Because they are electric, there is no oil to change. We recommend checking tire pressure monthly and keeping the battery charged. We also provide a comprehensive 2-year warranty on major components."
+  },
+  {
+    question: "Is there a weight limit for the riders?",
+    answer: "Our standard models are tested for riders up to 300 lbs (136 kg). The Eagle Cruiser is specifically reinforced for maximum stability and support."
   }
 ];
 
@@ -345,6 +375,87 @@ const GalleryPage = () => {
   );
 };
 
+const FAQPage = () => {
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  return (
+    <section className="py-20 min-h-screen" style={{ backgroundColor: COLORS.lightSurface }}>
+      <SectionHeading 
+        title="Common Questions" 
+        subtitle="Everything you need to know about our golf scooters, maintenance, and course compatibility." 
+      />
+      
+      <div className="container mx-auto px-6 max-w-3xl">
+        <div className="space-y-4">
+          {FAQS.map((faq, index) => (
+            <motion.div 
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="rounded-2xl overflow-hidden border border-[#E0D8C8] bg-white shadow-sm"
+            >
+              <button 
+                onClick={() => setActiveIndex(activeIndex === index ? null : index)}
+                className="w-full p-6 flex items-center justify-between text-left hover:bg-[#F9F7F2] transition-colors"
+              >
+                <div className="flex items-center gap-4">
+                   <div 
+                    className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: `${COLORS.accent}22`, color: COLORS.accent }}
+                   >
+                     <HelpCircle size={20} />
+                   </div>
+                   <span className="text-lg font-bold" style={{ color: COLORS.secondaryBg }}>{faq.question}</span>
+                </div>
+                <motion.div
+                  animate={{ rotate: activeIndex === index ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  style={{ color: COLORS.accent }}
+                >
+                  <ChevronDown size={24} />
+                </motion.div>
+              </button>
+              
+              <AnimatePresence>
+                {activeIndex === index && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="px-6 pb-6 pt-2 ml-14">
+                      <p className="text-lg leading-relaxed border-l-2 pl-6" style={{ color: COLORS.textPrimary, borderColor: COLORS.accent }}>
+                        {faq.answer}
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-16 p-8 rounded-3xl text-center text-[#F2EBDC]"
+          style={{ backgroundColor: COLORS.secondaryBg }}
+        >
+          <h3 className="text-2xl font-serif mb-4">Still have questions?</h3>
+          <p className="mb-8 opacity-80">Our team is available 7 days a week to help you find the perfect ride for your game.</p>
+          <div className="flex justify-center">
+             <Button variant="primary" className="px-10">Contact Support</Button>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 const TestimonialsPage = () => (
   <section className="py-20 min-h-screen relative overflow-hidden" style={{ backgroundColor: COLORS.primaryBg }}>
     <div className="absolute top-0 right-0 w-64 h-64 bg-[#F2EBDC] opacity-5 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
@@ -459,6 +570,9 @@ const App = () => {
       @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap');
       body { font-family: 'Lato', sans-serif; margin: 0; padding: 0; }
       h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #F2EBDC; }
+      ::-webkit-scrollbar-thumb { background: #C7A36A; border-radius: 4px; }
     `;
     document.head.appendChild(style);
 
@@ -475,8 +589,9 @@ const App = () => {
 
   const navItems = [
     { id: 'home', label: 'Home' },
-    { id: 'scooters', label: 'Golf Scooters' },
+    { id: 'scooters', label: 'Fleet' },
     { id: 'gallery', label: 'Gallery' },
+    { id: 'faq', label: 'Q&A' },
     { id: 'testimonials', label: 'Stories' },
     { id: 'quote', label: 'Get Quote' },
   ];
@@ -488,7 +603,7 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen font-sans selection:text-white" style={{ backgroundColor: COLORS.lightSurface, color: COLORS.textPrimary }}>
+    <div className="min-h-screen font-sans selection:bg-[#C7A36A] selection:text-white" style={{ backgroundColor: COLORS.lightSurface, color: COLORS.textPrimary }}>
       
       {/* Navigation */}
       <nav 
@@ -531,7 +646,7 @@ const App = () => {
             ))}
             <button 
                onClick={() => handleNav('quote')}
-               className="px-6 py-2 rounded-full font-bold transition-colors"
+               className="px-6 py-2 rounded-full font-bold transition-colors hover:bg-opacity-90 active:scale-95 transform"
                style={{ backgroundColor: COLORS.accent, color: '#1E1E1C' }}
             >
               Order Now
@@ -587,6 +702,7 @@ const App = () => {
             {activeTab === 'home' && <HomePage navigate={handleNav} />}
             {activeTab === 'scooters' && <ScootersPage />}
             {activeTab === 'gallery' && <GalleryPage />}
+            {activeTab === 'faq' && <FAQPage />}
             {activeTab === 'testimonials' && <TestimonialsPage />}
             {activeTab === 'quote' && <QuotePage />}
           </motion.div>
@@ -607,8 +723,8 @@ const App = () => {
             <ul className="space-y-3 opacity-80">
               <li onClick={() => handleNav('scooters')} className="cursor-pointer hover:text-[#C7A36A]">Our Models</li>
               <li onClick={() => handleNav('gallery')} className="cursor-pointer hover:text-[#C7A36A]">Gallery</li>
+              <li onClick={() => handleNav('faq')} className="cursor-pointer hover:text-[#C7A36A]">Questions & Answers</li>
               <li onClick={() => handleNav('testimonials')} className="cursor-pointer hover:text-[#C7A36A]">Customer Stories</li>
-              <li className="cursor-pointer hover:text-[#C7A36A]">Warranty Info</li>
             </ul>
           </div>
           <div>
