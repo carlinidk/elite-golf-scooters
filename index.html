@@ -3,15 +3,134 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Elite Golf Scooters | Premium Electric Golf Ride</title>
 
-  <meta name="description" content="Elite premium electric golf scooters. Ride the course in style with silent power, luxury control, and precision engineering." />
-  <meta name="keywords" content="golf scooter, electric golf scooter, premium golf ride, elite golf mobility" />
+  <title>Elite Golf Scooters™ | Premium Electric Golf Ride</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <!-- SEO -->
+  <meta name="description" content="Elite premium electric golf scooters. Push, ride, and fold with silent power, luxury control, and precision engineering." />
+  <meta name="keywords" content="golf scooter, electric golf scooter, premium golf mobility, elite golf ride" />
+  <meta name="author" content="Elite Golf Scooters" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Elite Golf Scooters™" />
+  <meta property="og:description" content="Play your game your way with premium electric golf scooters." />
+  <meta property="og:type" content="website" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+  <!-- Critical CSS (for instant render) -->
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: #F2EBDC;
+      color: #1E1E1C;
+    }
+
+    header {
+      background: linear-gradient(180deg, #1F332A 0%, #2F4B3C 100%);
+      color: #F2EBDC;
+      padding: 6rem 8%;
+    }
+
+    header h1 {
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      margin-bottom: 1rem;
+    }
+
+    header p {
+      max-width: 520px;
+      color: #EFE4CF;
+      font-size: 1.1rem;
+    }
+
+    .cta {
+      margin-top: 2rem;
+      display: inline-block;
+      background: #C7A36A;
+      color: #1E1E1C;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    section {
+      padding: 5rem 8%;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background: #EFE4CF;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    }
+
+    footer {
+      background: #1F332A;
+      color: #F2EBDC;
+      padding: 2rem;
+      text-align: center;
+    }
+  </style>
 </head>
+
 <body>
-  <div id="root"></div>
+
+  <!-- REAL, INDEXABLE CONTENT -->
+  <header>
+    <h1>Push. Ride. Fold.</h1>
+    <p>
+      Premium electric golf scooters designed for players who demand
+      performance, elegance, and effortless mobility.
+    </p>
+    <a href="#products" class="cta">Explore Scooters</a>
+  </header>
+
+  <main>
+    <section id="products">
+      <h2>Elite Golf Scooters</h2>
+      <div class="products">
+        <article class="card">
+          <h3>Pro Ride X</h3>
+          <p>Dual 800W motors · 35km range · Silent performance.</p>
+        </article>
+        <article class="card">
+          <h3>Elite Fold</h3>
+          <p>Ultra-compact · Lightweight · Trunk-ready design.</p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <blockquote>
+        <h2>“Golf should feel effortless.”</h2>
+        <p>Designed for elite players and premium courses.</p>
+      </blockquote>
+    </section>
+
+    <section>
+      <h2>Frequently Asked Questions</h2>
+      <p><strong>Range:</strong> Up to 35km per charge</p>
+      <p><strong>Foldable:</strong> Yes — fits standard car trunks</p>
+      <p><strong>Noise:</strong> Near-silent electric drive</p>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 Elite Golf Scooters™
+  </footer>
+
+  <!-- React Enhances Everything -->
+  <div id="react-root"></div>
   <script type="module" src="/src/main.jsx"></script>
+
 </body>
 </html>
