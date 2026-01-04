@@ -1,1 +1,631 @@
 https://carlinidk.github.io/elite-golf-scooters/
+================================================
+import React, { useState, useEffect } from 'react';
+import { 
+  ChevronRight, 
+  Star, 
+  Phone, 
+  Mail, 
+  MapPin, 
+  Menu, 
+  X, 
+  ShoppingCart, 
+  Info,
+  Image as ImageIcon,
+  Quote
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// --- Color Palette Constants ---
+const COLORS = {
+  primaryBg: '#2F4B3C',    // Court Green
+  secondaryBg: '#1F332A',  // Deep Forest
+  accent: '#C7A36A',       // Sand Clay
+  lightSurface: '#F2EBDC', // Match Cream
+  textPrimary: '#1E1E1C',  // Charcoal Ink
+  border: '#9C8B73',       // Warm Stone
+  darkCap: '#233D32',
+  paddleGreen: '#1E3A30',
+};
+
+// --- Mock Data ---
+
+const SCOOTERS = [
+  {
+    id: 1,
+    name: "The Eagle Cruiser",
+    price: "$2,499",
+    tagline: "Stability meets style.",
+    description: "Designed with a wider base for extra balance on uneven terrain. Features a plush, ergonomic seat and easy-read dashboard.",
+    specs: ["15 MPH Max Speed", "36 Holes Battery Life", "Heavy-duty Suspension"],
+    image: "https://images.unsplash.com/photo-1593111774240-d529f12db4b6?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    id: 2,
+    name: "Birdie Lite",
+    price: "$1,899",
+    tagline: "Lightweight freedom.",
+    description: "Perfect for the casual golfer. Easy to transport, simple to operate, and gentle on the turf.",
+    specs: ["12 MPH Max Speed", "18 Holes Battery Life", "Quick-Fold Design"],
+    image: "https://images.unsplash.com/photo-1628619623667-42b785d03a10?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    id: 3,
+    name: "Albatross Pro",
+    price: "$3,200",
+    tagline: "The tour standard.",
+    description: "Premium leather finishing, extended range battery, and a built-in cooler. The ultimate luxury ride.",
+    specs: ["20 MPH Max Speed", "54 Holes Battery Life", "GPS Integration"],
+    image: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    id: 4,
+    name: "Eagle Cruiser II",
+    price: "$2,699",
+    tagline: "Upgraded comfort.",
+    description: "The classic Eagle model with enhanced suspension for those back nines.",
+    specs: ["16 MPH Max Speed", "40 Holes Battery Life", "Orthopedic Seat"],
+    image: "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    id: 5,
+    name: "Birdie Sport",
+    price: "$2,100",
+    tagline: "Zip around the green.",
+    description: "A sportier version of our Lite model with higher torque for hilly courses.",
+    specs: ["14 MPH Max Speed", "27 Holes Battery Life", "Hill Assist"],
+    image: "https://images.unsplash.com/photo-1592919505780-30395071d480?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    id: 6,
+    name: "Grand Tourer",
+    price: "$3,500",
+    tagline: "For the long game.",
+    description: "Maximum storage and comfort for full-day tournaments.",
+    specs: ["18 MPH Max Speed", "60 Holes Battery Life", "Canopy Included"],
+    image: "https://images.unsplash.com/photo-1616032070897-404283590059?auto=format&fit=crop&q=80&w=800"
+  }
+];
+
+const TESTIMONIALS = [
+  {
+    id: 1,
+    name: "Arthur D.",
+    role: "Retired Architect",
+    text: "I thought my golfing days were over due to my knees. The Eagle Cruiser gave me my game back. It's incredibly stable and easy to get on and off.",
+    rating: 5
+  },
+  {
+    id: 2,
+    name: "Martha S.",
+    role: "Club Champion '22",
+    text: "The battery life is phenomenal. I can do 36 holes without even thinking about charging. Highly recommended for anyone wanting independence on the course.",
+    rating: 5
+  },
+  {
+    id: 3,
+    name: "James P.",
+    role: "Senior League Director",
+    text: "Our club bought a fleet of these. They are gentle on the grass and the members absolutely love them. Simple controls, smooth ride.",
+    rating: 5
+  }
+];
+
+const GALLERY_IMAGES = [
+  "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1593111774240-d529f12db4b6?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1628619623667-42b785d03a10?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1592919505780-30395071d480?auto=format&fit=crop&q=80&w=800",
+  "https://images.unsplash.com/photo-1616032070897-404283590059?auto=format&fit=crop&q=80&w=800"
+];
+
+// --- Components ---
+
+const Button = ({ children, variant = "primary", onClick, className = "" }) => {
+  const baseStyle = "px-8 py-3 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2";
+  
+  const variantStyles = {
+    primary: { backgroundColor: COLORS.accent, color: COLORS.textPrimary },
+    secondary: { backgroundColor: COLORS.secondaryBg, color: COLORS.lightSurface },
+    outline: { backgroundColor: 'transparent', border: `2px solid ${COLORS.border}`, color: COLORS.secondaryBg }
+  };
+
+  const currentStyle = variantStyles[variant] || variantStyles.primary;
+
+  return (
+    <button 
+      onClick={onClick} 
+      className={`${baseStyle} ${className}`}
+      style={currentStyle}
+    >
+      {children}
+    </button>
+  );
+};
+
+const SectionHeading = ({ title, subtitle }) => (
+  <div className="text-center mb-16 px-4">
+    <motion.h2 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="text-4xl md:text-5xl font-bold mb-4 font-serif"
+      style={{ color: COLORS.secondaryBg }}
+    >
+      {title}
+    </motion.h2>
+    <motion.div 
+      initial={{ width: 0 }}
+      whileInView={{ width: "100px" }}
+      viewport={{ once: true }}
+      className="h-1 mx-auto mb-6"
+      style={{ backgroundColor: COLORS.accent }}
+    />
+    {subtitle && (
+      <motion.p 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.2 }}
+        className="text-xl opacity-80 max-w-2xl mx-auto"
+        style={{ color: COLORS.textPrimary }}
+      >
+        {subtitle}
+      </motion.p>
+    )}
+  </div>
+);
+
+// --- Pages ---
+
+const HomePage = ({ navigate }) => (
+  <div className="w-full">
+    {/* Hero Section */}
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden" style={{ backgroundColor: COLORS.primaryBg }}>
+      <div className="absolute inset-0 z-0 opacity-40">
+        <img 
+          src="https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=2000" 
+          alt="Golf Course Background" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${COLORS.secondaryBg}80 0%, ${COLORS.primaryBg} 100%)` }}></div>
+      </div>
+
+      <div className="relative z-10 container mx-auto px-6 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <span className="inline-block px-4 py-2 rounded-full font-bold tracking-wider mb-6 border" style={{ backgroundColor: `${COLORS.accent}33`, color: COLORS.accent, borderColor: `${COLORS.accent}4D` }}>
+            REDISCOVER THE COURSE
+          </span>
+          <h1 className="text-5xl md:text-7xl font-bold text-[#F2EBDC] mb-8 font-serif leading-tight">
+            Ride in Comfort.<br/>Play with Passion.
+          </h1>
+          <p className="text-xl md:text-2xl text-[#F2EBDC]/90 mb-10 max-w-3xl mx-auto leading-relaxed">
+            Premium golf scooters designed for stability, ease of use, and a smoother game.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <Button variant="primary" onClick={() => navigate('scooters')}>
+              View Scooters
+            </Button>
+            <Button variant="outline" className="border-[#F2EBDC] text-[#F2EBDC] hover:text-[#1F332A]" onClick={() => navigate('quote')}>
+              Request Quote
+            </Button>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+
+    {/* Values Section */}
+    <section className="py-20" style={{ backgroundColor: COLORS.lightSurface }}>
+      <div className="container mx-auto px-6 grid md:grid-cols-3 gap-12 text-center">
+        {[
+          { icon: <Star size={40} />, title: "Premium Comfort", desc: "Ergonomic seating designed for all-day play without fatigue." },
+          { icon: <Info size={40} />, title: "Easy Operation", desc: "Intuitive controls. No learning curve. Just get on and go." },
+          { icon: <MapPin size={40} />, title: "Turf Friendly", desc: "Lightweight engineering that protects the fairways you love." }
+        ].map((item, idx) => (
+          <motion.div 
+            key={idx}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: idx * 0.2 }}
+            className="p-8 rounded-2xl bg-white shadow-xl border-t-4"
+            style={{ borderTopColor: COLORS.accent }}
+          >
+            <div className="mb-6 flex justify-center" style={{ color: COLORS.accent }}>{item.icon}</div>
+            <h3 className="text-2xl font-bold mb-4" style={{ color: COLORS.secondaryBg }}>{item.title}</h3>
+            <p className="text-lg" style={{ color: COLORS.textPrimary }}>{item.desc}</p>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  </div>
+);
+
+const ScootersPage = () => (
+  <section className="py-20 min-h-screen" style={{ backgroundColor: COLORS.lightSurface }}>
+    <SectionHeading 
+      title="Our Fleet" 
+      subtitle="Choose the perfect companion for your next round. Each model is built with reliability and comfort as the priority."
+    />
+    
+    <div className="container mx-auto px-6 grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+      {SCOOTERS.map((scooter, idx) => (
+        <motion.div 
+          key={scooter.id}
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: idx * 0.1 }}
+          className="bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300 flex flex-col h-full"
+        >
+          <div className="relative h-64 overflow-hidden group">
+            <img 
+              src={scooter.image} 
+              alt={scooter.name} 
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            <div className="absolute top-4 right-4 text-[#F2EBDC] px-4 py-1 rounded-full font-bold shadow-md" style={{ backgroundColor: COLORS.secondaryBg }}>
+              {scooter.price}
+            </div>
+          </div>
+          
+          <div className="p-8 flex-1 flex flex-col">
+            <h3 className="text-2xl font-bold mb-2 font-serif" style={{ color: COLORS.secondaryBg }}>{scooter.name}</h3>
+            <p className="font-medium mb-4 italic" style={{ color: COLORS.accent }}>{scooter.tagline}</p>
+            <p className="mb-6 leading-relaxed" style={{ color: COLORS.textPrimary }}>{scooter.description}</p>
+            
+            <div className="mt-auto">
+              <div className="space-y-2 mb-8">
+                {scooter.specs.map((spec, i) => (
+                  <div key={i} className="flex items-center gap-2 text-sm text-[#7A6F60]">
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS.accent }}></div>
+                    {spec}
+                  </div>
+                ))}
+              </div>
+              <Button variant="outline" className="w-full">View Details</Button>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  </section>
+);
+
+const GalleryPage = () => {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  return (
+    <section className="py-20 min-h-screen" style={{ backgroundColor: COLORS.lightSurface }}>
+      <SectionHeading title="On The Course" subtitle="See our scooters in their natural habitat." />
+      
+      <div className="container mx-auto px-6 columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
+        {GALLERY_IMAGES.map((img, idx) => (
+          <motion.div 
+            key={idx}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="break-inside-avoid rounded-2xl overflow-hidden shadow-lg cursor-pointer group relative"
+            onClick={() => setSelectedImage(img)}
+          >
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 z-10" />
+            <img src={img} alt={`Gallery ${idx}`} className="w-full h-auto transform transition-transform duration-500 group-hover:scale-105" />
+          </motion.div>
+        ))}
+      </div>
+
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+            onClick={() => setSelectedImage(null)}
+          >
+            <button className="absolute top-8 right-8 text-white p-2">
+              <X size={40} />
+            </button>
+            <img 
+              src={selectedImage} 
+              alt="Full view" 
+              className="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl"
+              onClick={(e) => e.stopPropagation()} 
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+};
+
+const TestimonialsPage = () => (
+  <section className="py-20 min-h-screen relative overflow-hidden" style={{ backgroundColor: COLORS.primaryBg }}>
+    <div className="absolute top-0 right-0 w-64 h-64 bg-[#F2EBDC] opacity-5 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+    <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#C7A36A] opacity-5 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2"></div>
+    
+    <div className="container mx-auto px-6 relative z-10">
+      <div className="text-center mb-16">
+        <h2 className="text-4xl md:text-5xl font-bold text-[#F2EBDC] mb-4 font-serif">Community Stories</h2>
+        <div className="h-1 w-24 mx-auto" style={{ backgroundColor: COLORS.accent }}></div>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-8">
+        {TESTIMONIALS.map((t, idx) => (
+          <motion.div 
+            key={t.id}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: idx * 0.2 }}
+            className="p-10 rounded-2xl shadow-xl border"
+            style={{ backgroundColor: COLORS.secondaryBg, borderColor: `${COLORS.border}4D` }}
+          >
+            <div className="mb-6" style={{ color: COLORS.accent }}>
+              <Quote size={40} fill={COLORS.accent} />
+            </div>
+            <p className="text-[#F2EBDC] text-xl leading-relaxed italic mb-8">"{t.text}"</p>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl" style={{ backgroundColor: COLORS.accent, color: COLORS.secondaryBg }}>
+                {t.name.charAt(0)}
+              </div>
+              <div>
+                <h4 className="text-[#F2EBDC] font-bold text-lg">{t.name}</h4>
+                <p className="text-sm" style={{ color: COLORS.accent }}>{t.role}</p>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const QuotePage = () => (
+  <section className="py-20 min-h-screen flex items-center" style={{ backgroundColor: COLORS.lightSurface }}>
+    <div className="container mx-auto px-6">
+      <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+        <div className="md:w-1/3 p-10 flex flex-col justify-between text-[#F2EBDC]" style={{ backgroundColor: COLORS.secondaryBg }}>
+          <div>
+            <h3 className="text-3xl font-bold font-serif mb-6">Let's Get You Rolling</h3>
+            <p className="opacity-80 mb-8 text-lg">Interested in a specific model? Fill out the form and our team will provide a personalized quote including shipping.</p>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <Phone size={20} style={{ color: COLORS.accent }} />
+              <span>(555) 123-4567</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Mail size={20} style={{ color: COLORS.accent }} />
+              <span>sales@golfscooters.com</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="md:w-2/3 p-10">
+          <form className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-bold text-[#7A6F60] mb-2">First Name</label>
+                <input type="text" className="w-full p-4 rounded-lg bg-[#F9F7F2] border border-[#E0D8C8] focus:border-[#C7A36A] outline-none transition-colors" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-[#7A6F60] mb-2">Last Name</label>
+                <input type="text" className="w-full p-4 rounded-lg bg-[#F9F7F2] border border-[#E0D8C8] focus:border-[#C7A36A] outline-none transition-colors" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-[#7A6F60] mb-2">Email Address</label>
+              <input type="email" className="w-full p-4 rounded-lg bg-[#F9F7F2] border border-[#E0D8C8] focus:border-[#C7A36A] outline-none transition-colors" />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-[#7A6F60] mb-2">Interested Model</label>
+              <select className="w-full p-4 rounded-lg bg-[#F9F7F2] border border-[#E0D8C8] focus:border-[#C7A36A] outline-none transition-colors text-[#1E1E1C]">
+                <option>The Eagle Cruiser</option>
+                <option>Birdie Lite</option>
+                <option>Albatross Pro</option>
+                <option>Undecided / Need Advice</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-[#7A6F60] mb-2">Message (Optional)</label>
+              <textarea rows="4" className="w-full p-4 rounded-lg bg-[#F9F7F2] border border-[#E0D8C8] focus:border-[#C7A36A] outline-none transition-colors"></textarea>
+            </div>
+            <Button className="w-full">Request Quote</Button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+// --- Main App Component ---
+
+const App = () => {
+  const [activeTab, setActiveTab] = useState('home');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    // Inject global styles
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap');
+      body { font-family: 'Lato', sans-serif; margin: 0; padding: 0; }
+      h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+    `;
+    document.head.appendChild(style);
+
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.head.removeChild(style);
+    };
+  }, []);
+
+  const navItems = [
+    { id: 'home', label: 'Home' },
+    { id: 'scooters', label: 'Golf Scooters' },
+    { id: 'gallery', label: 'Gallery' },
+    { id: 'testimonials', label: 'Stories' },
+    { id: 'quote', label: 'Get Quote' },
+  ];
+
+  const handleNav = (id) => {
+    setActiveTab(id);
+    setIsMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <div className="min-h-screen font-sans selection:text-white" style={{ backgroundColor: COLORS.lightSurface, color: COLORS.textPrimary }}>
+      
+      {/* Navigation */}
+      <nav 
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+          scrolled ? 'shadow-lg py-3' : 'lg:bg-transparent py-6'
+        }`}
+        style={{ backgroundColor: scrolled ? COLORS.secondaryBg : COLORS.secondaryBg }}
+      >
+        <div className="container mx-auto px-6 flex justify-between items-center">
+          <div 
+            className="flex items-center gap-2 cursor-pointer" 
+            onClick={() => handleNav('home')}
+          >
+            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: COLORS.accent }}>
+              <span className="font-bold text-xl" style={{ color: COLORS.secondaryBg }}>G</span>
+            </div>
+            <span className="text-2xl font-bold font-serif text-[#F2EBDC] tracking-wide">
+              Golf<span style={{ color: COLORS.accent }}>Glide</span>
+            </span>
+          </div>
+
+          {/* Desktop Nav */}
+          <div className="hidden lg:flex items-center gap-8">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleNav(item.id)}
+                className={`text-lg font-medium transition-colors duration-300 ${
+                  activeTab === item.id 
+                    ? 'border-b-2' 
+                    : 'text-[#F2EBDC] hover:text-[#C7A36A]'
+                }`}
+                style={{ 
+                  color: activeTab === item.id ? COLORS.accent : '#F2EBDC',
+                  borderBottomColor: activeTab === item.id ? COLORS.accent : 'transparent'
+                }}
+              >
+                {item.label}
+              </button>
+            ))}
+            <button 
+               onClick={() => handleNav('quote')}
+               className="px-6 py-2 rounded-full font-bold transition-colors"
+               style={{ backgroundColor: COLORS.accent, color: '#1E1E1C' }}
+            >
+              Order Now
+            </button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button 
+            className="lg:hidden text-[#F2EBDC]"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X size={32} /> : <Menu size={32} />}
+          </button>
+        </div>
+
+        {/* Mobile Nav Overlay */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="lg:hidden border-t overflow-hidden"
+              style={{ backgroundColor: COLORS.secondaryBg, borderTopColor: `${COLORS.accent}33` }}
+            >
+              <div className="flex flex-col p-6 space-y-4">
+                {navItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNav(item.id)}
+                    className="text-xl font-medium text-left py-2"
+                    style={{ color: activeTab === item.id ? COLORS.accent : '#F2EBDC' }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
+
+      {/* Main Content */}
+      <main className="pt-0">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            {activeTab === 'home' && <HomePage navigate={handleNav} />}
+            {activeTab === 'scooters' && <ScootersPage />}
+            {activeTab === 'gallery' && <GalleryPage />}
+            {activeTab === 'testimonials' && <TestimonialsPage />}
+            {activeTab === 'quote' && <QuotePage />}
+          </motion.div>
+        </AnimatePresence>
+      </main>
+
+      {/* Footer */}
+      <footer className="py-16 border-t" style={{ backgroundColor: COLORS.secondaryBg, borderTopColor: `${COLORS.accent}4D`, color: '#F2EBDC' }}>
+        <div className="container mx-auto px-6 grid md:grid-cols-4 gap-12">
+          <div className="md:col-span-2">
+            <h3 className="text-3xl font-bold font-serif mb-6" style={{ color: COLORS.accent }}>GolfGlide</h3>
+            <p className="opacity-80 text-lg leading-relaxed max-w-md">
+              Bringing mobility, independence, and style back to your game. We believe golf is a sport for life, and we are here to help you play it comfortably.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-xl font-bold mb-6" style={{ color: COLORS.accent }}>Quick Links</h4>
+            <ul className="space-y-3 opacity-80">
+              <li onClick={() => handleNav('scooters')} className="cursor-pointer hover:text-[#C7A36A]">Our Models</li>
+              <li onClick={() => handleNav('gallery')} className="cursor-pointer hover:text-[#C7A36A]">Gallery</li>
+              <li onClick={() => handleNav('testimonials')} className="cursor-pointer hover:text-[#C7A36A]">Customer Stories</li>
+              <li className="cursor-pointer hover:text-[#C7A36A]">Warranty Info</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-xl font-bold mb-6" style={{ color: COLORS.accent }}>Contact Us</h4>
+            <ul className="space-y-3 opacity-80">
+              <li className="flex items-center gap-2"><Phone size={18} /> (555) 123-4567</li>
+              <li className="flex items-center gap-2"><Mail size={18} /> info@golfglide.com</li>
+              <li className="flex items-center gap-2"><MapPin size={18} /> Scottsdale, AZ</li>
+            </ul>
+          </div>
+        </div>
+        <div className="container mx-auto px-6 mt-16 pt-8 border-t text-center opacity-60 text-sm" style={{ borderTopColor: `${COLORS.border}33` }}>
+          © {new Date().getFullYear()} GolfGlide Scooters. All rights reserved.
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
